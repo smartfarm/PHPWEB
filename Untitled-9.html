@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>js 仿淘宝首页最新图片幻灯切换效果</title>
+<meta http-equiv="content-type" content="text/html;charset=gb2312">
+<!--把下面代码加到<head>与</head>之间-->
+<style type="text/css">
+body{font:12px/1.5 Tahoma,Helvetica,Arial,sans-serif;position:absolute; top:0px; left:0px;}
+body,div,ul,ol,li,h1,h2,h3,h4,h5,h6{margin:0;padding:0; list-style-type:none}
+img{border:none;}
+a,a:link,a:visited{color:#333333;text-decoration:none;cursor:pointer;}
+a:hover{color:#008b00;text-decoration:underline;}
+.hd h3{font-size:14px;color:#444444;padding-left:10px;color:#fff;line-height:30px;}
+.loading{background:#f9fdff url('http://www.zzsky.cn/effect/images/201004241815/T16WJqXaXeXXXXXXXX-32-32.gif') no-repeat 50% 50%;}
+.j_Slide{margin:0;border:5px #c2dae5 solid;width:400px;height:300px;overflow:hidden;position:relative;-webkit-border-radius:0px;}
+.j_Slide .tb-slide-list{position:absolute;width:99999px;}
+.j_Slide .tb-slide-list li{height:300px;}
+.j_Slide .tb-slide-list li img{width:400px;height:300px;}
+	.lbtn{position:absolute;z-index:3;bottom:3px;right:5px;}
+	.lbtn li{float:left;line-height:21px;width:24px;padding:0 2px;}
+	.lbtn li a,.lbtn li a:link,.lbtn li a:active,.lbtn li a:visited{display:block;text-align:center;background:url('http://www.zzsky.cn/effect/images/201004241815/lbtnA_bg.gif') no-repeat left 50%;line-height:21px;font-family:"Arial Unicode MS";}
+	.lbtn li.hover a,.lbtn li.hover a:link,.lbtn li.hover a:active,.lbtn li.hover a:visited	{color:#fff;font-weight:bold;font-family:Verdana;text-decoration:none;background:url('http://www.zzsky.cn/effect/images/201004241815/lbtnA_bg_hover.gif') no-repeat left top;}
+.j_Slide1{width:400px;height:300px;overflow:hidden;margin:30px 50px;}
+.j_Slide1 .tb-slide-list{position:absolute;width:99999px;}
+.j_Slide1 .bd{overflow:hidden;}
+.j_Slide1 .tb-slide-list li img{width:200px;height:100px;padding:8px;overflow:hidden;}
+.j_Slide1 .hd{height:30px;position:relative;background:#666;-webkit-border-top-left-radius:4px;-webkit-border-top-right-radius:4px;}
+.j_Slide1 .bd{position:relative;border:1px #000 solid;height:116px;}
+.j_Slide1 .hd .handel{position:absolute;right:5px;top:6px;}
+.j_Slide1 .hd .handel li{float:left;}
+.j_Slide1 .hd .handel li a,.j_Slide1 .hd .handel li a:link,.j_Slide1 .hd .handel li a:active,.j_Slide1 .hd .handel li a:visited{text-decoration:none;padding:0px 0px;}
+.j_Slide1 .hd .handel li.hover a,.j_Slide1 .hd .handel li.hover a:link,.j_Slide1 .hd .handel li.hover a:active,.j_Slide1 .hd .handel li.hover a:visited{color:#fff;}
+.direct-left{width:99999px;}
+.direct-left li{float:left;}
+.direct-right{}
+.direct(www.111cn.net)-right li{float:right;}
+</style>
+<script src="./Scripts/jquery.min.js" language="javascript" type="text/javascript"></script>
+<script src="./Scripts/oslide.js" language="javascript" type="text/javascript"></script>
+<script src="./Scripts/easing.js" language="javascript" type="text/javascript"></script>
+<script language="javascript" type="text/javascript">
+$(function() {
+var $o = $(".j_Slide");
+	var ks = $o.find("ol").Oslide({
+		slidetag:$o.find("ol>li"),
+		easing:"easeInOutCirc",
+		speed:450
+	});
+var $p = $(".j_Slide1");
+	var ks = $p.find("ol").Oslide({
+		slidetag:$p.find("ol>li"),
+		btntag:$p.find(".handel"),
+		direct:'right',
+		easing:"easeInOutCirc"
+	});
+});
+</script>
+</head>
+<body>
+<!--把下面代码加到<body>与</body>之间-->
+
+<?php
+
+ $con = mysql_connect('localhost', 'root', 'studentxing1968,');
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }
+
+$db_selected = mysql_select_db("test_1", $con);
+
+if (!$db_selected)
+  {
+  die ("Can\'t use test_db : " . mysql_error());
+  }
+$delete = "delete from pictures";
+$delete_1 = "delete from pictures_4";
+mysql_query($delete,$con);
+mysql_query($delete_1,$con);
+
+//打开 images 目录
+
+  $dir_1 = opendir("D:/PHPWeb/pictures_4");
+$j=null;
+while (($file = readdir($dir_1)) !== false)
+  {
+
+  $sql_1 = "insert into pictures_4 (id, name, root) values($j, '$file','./pictures_4/$file')";
+mysql_query($sql_1,$con);
+$j++;
+  }
+  closedir($dir_1);
+
+?>
+
+
+<div class="j j_Slide loading">
+	<ol class="tb-slide-list">
+		<?php 
+        for($w=2;$w<$j;$w++){
+        $qutu_3="select root from pictures_4 where id=$w"; 
+        $result_3=mysql_query($qutu_3,$con);
+        while($row_3=mysql_fetch_array($result_3)){
+         ?>
+		<li class="J_ECPM"><target="_blank"><?php echo "<img src=\"".$row_3["root"]."\"/>";?></a></li>
+		<?php } }?>
+	</ol>
+</div>
+
+</body>
+</html>
